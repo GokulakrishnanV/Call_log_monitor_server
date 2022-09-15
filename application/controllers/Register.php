@@ -27,7 +27,7 @@ class Register extends CI_Controller
     {
         $this->form_validation->set_rules('user_name', 'Name', 'required|trim');
         $this->form_validation->set_rules('user_email', 'Email Address', 'required|trim|valid_email');
-        $this->form_validation->set_rules('user_password', 'Password', 'required|min_length[8]|max_length[20]');
+        $this->form_validation->set_rules('user_password', 'Password', 'required|trim|min_length[8]|max_length[20]');
 
         if ($this->form_validation->run()) {
             $verification_key = md5(rand());
@@ -41,7 +41,7 @@ class Register extends CI_Controller
             $id = $this->register_model->insert($data);
 
             if ($id > 1) {
-                $subject = "Kindly verify your email for Flutter Call Log App";
+                $subject = "Email verification for Flutter Call Log App";
                 $message = "
                 <p>Hi there " . $this->input->post('user_name') . ",<p>
                 <p>Kindly verify your email to complete your registration for Flutter call log app.<p>
@@ -52,7 +52,6 @@ class Register extends CI_Controller
                 $config = array(
                     'protocol' => 'smtp',
                     'smtp_host' => 'smtp.gmail.com',
-                    'smtp_port' => '587',
                     'smtp_port' => 465,
                     'smtp_user'  => 'flutterdev.warx@gmail.com',
                     'smtp_pass'  => 'kndtprxxizraojne',
@@ -63,7 +62,7 @@ class Register extends CI_Controller
                 );
                 $this->load->library('email', $config);
                 $this->email->set_newline("\r\n");
-                $this->email->from('flutterdev.warx@gmail.com');
+                $this->email->from('flutterdev.warx@gmail.com','Warx Support');
                 $this->email->to($this->input->post('user_email'));
                 $this->email->subject($subject);
                 $this->email->message($message);

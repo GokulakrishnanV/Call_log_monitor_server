@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Superuserhome extends CI_Controller
+class SuperUserhome extends CI_Controller
 {
 
     //Validating the used login
