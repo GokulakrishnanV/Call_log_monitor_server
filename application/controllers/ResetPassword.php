@@ -9,8 +9,8 @@ class ResetPassword extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        if ($this->session->userdata('id')) {
-            redirect('home');
+        if ($this->session->userdata('user_type')) {
+            redirect('superuserhome');
         }
         $this->load->library('form_validation');
         $this->load->model('passwordreset_model');
@@ -33,6 +33,7 @@ class ResetPassword extends CI_Controller
                 'password_reset_key' => $password_reset_key,
             );
             $status = $this->passwordreset_model->update($data, $user_email);
+            $userAgent = implode(";", $this->input->request_headers());
 
             if ($status == true) {
                 $username = $this->passwordreset_model->retreive_username($user_email);
@@ -64,12 +65,22 @@ class ResetPassword extends CI_Controller
                 $this->email->message($message);
 
                 if ($this->email->send()) {
-                    $this->session->set_flashdata('message', 'Check your email inbox for password reset email. If not received, check your spam folder');
-                    redirect('login');
+                    if (str_contains($userAgent, 'Dart')) {
+                        $response = array("status" => 1, "message" => "Password reset email has been sent.\nIf not received, check your spam folder");
+                        echo json_encode($response);
+                    } else {
+                        $this->session->set_flashdata('message', 'Check your email inbox for password reset email. If not received, check your spam folder');
+                        redirect('login');
+                    }
                 }
             } else {
-                $this->session->set_flashdata('message', 'Email not found');
-                redirect('resetpassword');
+                if (str_contains($userAgent, 'Dart')) {
+                    $response = array("status" => 0, "error" => "Email not found.");
+                    echo json_encode($response);
+                } else {
+                    $this->session->set_flashdata('message', 'Email not found.');
+                    redirect('resetpassword');
+                }
             }
         }
     }

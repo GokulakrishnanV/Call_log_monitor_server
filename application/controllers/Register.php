@@ -9,8 +9,8 @@ class Register extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        if ($this->session->userdata('id')) {
-            redirect('home');
+        if ($this->session->userdata('user_type')) {
+            redirect('superuserhome');
         }
         $this->load->library('form_validation');
         $this->load->model('register_model');
@@ -39,7 +39,8 @@ class Register extends CI_Controller
                 'verification_key' => $verification_key,
             );
             $id = $this->register_model->insert($data);
-
+            $userAgent = implode(";", $this->input->request_headers());
+            
             if ($id > 1) {
                 $subject = "Email verification for Flutter Call Log App";
                 $message = "
@@ -62,24 +63,38 @@ class Register extends CI_Controller
                 );
                 $this->load->library('email', $config);
                 $this->email->set_newline("\r\n");
-                $this->email->from('flutterdev.warx@gmail.com','Warx Support');
+                $this->email->from('flutterdev.warx@gmail.com', 'Warx Support');
                 $this->email->to($this->input->post('user_email'));
                 $this->email->subject($subject);
                 $this->email->message($message);
 
                 if ($this->email->send()) {
-                    $this->session->set_flashdata('message', 'Check your email inbox for verification email. If not received, check your spam folder');
-                    redirect('login');
+                    if (str_contains($userAgent, 'Dart')) {
+                        $response = array("status" => 1, "message" => "Verification email has been sent.\nIf not received, check your spam folder");
+                        echo json_encode($response);
+                    } else {
+                        $this->session->set_flashdata('message', 'Check your email inbox for verification email. If not received, check your spam folder');
+                        redirect('login');
+                    }
                 }
-            }elseif($id == 1){
-                $this->session->set_flashdata('message', 'Username already exists');
-                redirect('register');
+            } elseif ($id == 1) {
+                if (str_contains($userAgent, 'Dart')) {
+                    $response = array("status" => 2, "error" => "Username already exists.\nKindly use another username.");
+                    echo json_encode($response);
+                } else {
+                    $this->session->set_flashdata('message', 'Username already exists');
+                    redirect('register');
+                }
+            } else {
+                if (str_contains($userAgent, 'Dart')) {
+                    $response = array("status" => 0, "error" => "Email already exists.");
+                    echo json_encode($response);
+                } else {
+                    $this->session->set_flashdata('message', 'Email already exists');
+                    redirect('register');
+                }
             }
-            else{
-                $this->session->set_flashdata('message', 'Email already exists');
-                redirect('register');
-            }
-        } else{
+        } else {
             $this->index();
         }
     }
