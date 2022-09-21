@@ -19,6 +19,7 @@
             <th>Date and Time</th>
         </tr>
         <?php
+        //print_r($result->result());
         foreach ($result->result() as $user_data) {
             echo "<tr>";
             echo "<td>" . $user_data->id . "</td>";
@@ -29,7 +30,8 @@
             echo "<td>" . $user_data->call_type . "</td>";
             echo "<td>" . $user_data->date_time . "</td>";
             echo "</tr>";
-        } ?>
+        }
+        ?>
     </table>
 
 </body>

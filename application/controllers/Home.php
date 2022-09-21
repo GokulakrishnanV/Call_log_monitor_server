@@ -10,7 +10,12 @@ class Home extends CI_Controller
     {
         parent::__construct();
         $this->load->model('home_model');
-        if (!$this->session->userdata('id')) {
+        if (!$this->session->userdata('user_type')) {
+            $userAgent = implode(";", $this->input->request_headers());
+            if (str_contains($userAgent, 'Dart')) {
+                $response = array("status" => 0, "error" => "Invalid session,\nKindly login again");
+                echo json_encode($response);
+            }
             redirect('login');
         }
     }
@@ -18,20 +23,35 @@ class Home extends CI_Controller
     //Loading the Home view in the browser
     function index()
     {
-        echo '<br/><br/><br/><h3 align="center">Welcome User</h3>';
-        echo '<p align="center"><a href="' . base_url() . 'home/logout">Logout</a></p>';
+        $userAgent = implode(";", $this->input->request_headers());
         $data['result'] = $this->home_model->retreive_call_logs();
-        $this->load->view('home', $data);
+        if (str_contains($userAgent, 'Dart')) {
+            foreach ($data as $responseData){
+                $response = array("status" => 1, "message" => $responseData->result());
+            }
+            log_message('debug', json_encode($response));
+            echo json_encode($response);
+        } else {
+            echo '<br/><br/><br/><h3 align="center">Welcome User</h3>';
+            echo '<p align="center"><a href="' . base_url() . 'home/logout">Logout</a></p>';
+            $this->load->view('home', $data);
+        }
     }
 
     //Log out the user
     function logout()
     {
+        $userAgent = implode(";", $this->input->request_headers());
         $data = $this->session->all_userdata();
         foreach ($data as $row => $rows_value) {
             $this->session->unset_userdata($row);
         }
         $this->session->sess_destroy();
-        redirect('login');
+        if (str_contains($userAgent, 'Dart')) {
+            $response = array("status" => 1, "message" => "Logged out successfully");
+            echo json_encode($response);
+        } else {
+            redirect('login');
+        }
     }
 }

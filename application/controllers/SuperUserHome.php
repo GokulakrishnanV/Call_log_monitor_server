@@ -9,7 +9,7 @@ class SuperUserhome extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        if (!$this->session->userdata('id')) {
+        if (!$this->session->userdata('user_type')) {
             redirect('login');
         }
         $this->load->model('superuserhome_model');

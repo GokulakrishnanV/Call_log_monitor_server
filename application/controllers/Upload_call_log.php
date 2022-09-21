@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Upload_call_log extends CI_Controller
 {
@@ -8,20 +8,15 @@ class Upload_call_log extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        if(!$this->session->userdata('id')){
+        if (!$this->session->userdata('id')) {
             echo 'Invalid Session';
             redirect('login');
         }
         $this->load->model('upload_call_log_model');
     }
 
-    //Loading a empty view+ to echo error messages
+    //Uploading the call log to the database. (There is no view since it is used only for app)
     function index()
-    {
-    }
-
-    //Uploading the call log in the database
-    function upload_call_log()
     {
         $data = array(
             'user_name' => $this->input->post('user_name'),
@@ -32,13 +27,11 @@ class Upload_call_log extends CI_Controller
             'date_time' => $this->input->post('date_time'),
         );
         $result = $this->upload_call_log_model->upload_call_log($data);
-        if($result == true){
-            echo 'Data successfully uploaded';
+        if ($result == true) {
+            $response = array("status" => 1, "message" => "Data successfully uploaded");
+        } else {
+            $response = array("status" => 0, "message" => "Error uploading data");
         }
-        else{
-            echo 'Error uploading data';
-        }
+        echo json_encode($response);
     }
 }
-
-?>
