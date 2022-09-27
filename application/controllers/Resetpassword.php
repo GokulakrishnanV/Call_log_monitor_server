@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class ResetPassword extends CI_Controller
+class Resetpassword extends CI_Controller
 {
 
     //Loading the form validation and reset password model
@@ -51,7 +51,7 @@ class ResetPassword extends CI_Controller
                     'smtp_host' => 'smtp.gmail.com',
                     'smtp_port' => 465,
                     'smtp_user'  => 'flutterdev.warx@gmail.com',
-                    'smtp_pass'  => 'kndtprxxizraojne',
+                    'smtp_pass'  => 'syubelukmiooihrk',
                     'mailtype'  => 'html',
                     'charset'    => 'iso-8859-1',
                     'wordwrap'   => TRUE,

@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Upload_call_log extends CI_Controller
+class UploadCallLog extends CI_Controller
 {
     //Loading the upload_call_log model
     public function __construct()

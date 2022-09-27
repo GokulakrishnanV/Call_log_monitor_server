@@ -55,7 +55,7 @@ class Register extends CI_Controller
                     'smtp_host' => 'smtp.gmail.com',
                     'smtp_port' => 465,
                     'smtp_user'  => 'flutterdev.warx@gmail.com',
-                    'smtp_pass'  => 'kndtprxxizraojne',
+                    'smtp_pass'  => 'syubelukmiooihrk',
                     'mailtype'  => 'html',
                     'charset'    => 'iso-8859-1',
                     'wordwrap'   => TRUE,

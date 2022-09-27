@@ -1,6 +1,6 @@
 <?php
 
-class PasswordReset_model extends CI_Model
+class Passwordreset_model extends CI_Model
 {  
     //Updates the password_reset_key in the database
     function update($data,$user_email)

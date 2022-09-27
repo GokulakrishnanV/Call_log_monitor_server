@@ -10,8 +10,8 @@ class Home extends CI_Controller
     {
         parent::__construct();
         $this->load->model('home_model');
-        if (!$this->session->userdata('user_type')) {
-            $userAgent = implode(";", $this->input->request_headers());
+        $userAgent = implode(";", $this->input->request_headers());
+        if (!$this->session->userdata('id')) {
             if (str_contains($userAgent, 'Dart')) {
                 $response = array("status" => 0, "error" => "Invalid session,\nKindly login again");
                 echo json_encode($response);
@@ -26,7 +26,7 @@ class Home extends CI_Controller
         $userAgent = implode(";", $this->input->request_headers());
         $data['result'] = $this->home_model->retreive_call_logs();
         if (str_contains($userAgent, 'Dart')) {
-            foreach ($data as $responseData){
+            foreach ($data as $responseData) {
                 $response = array("status" => 1, "message" => $responseData->result());
             }
             log_message('debug', json_encode($response));
