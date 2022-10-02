@@ -56,4 +56,5 @@ class Passwordreset_model extends CI_Model
  
     }
 }
+
 ?>

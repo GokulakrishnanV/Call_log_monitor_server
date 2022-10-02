@@ -48,6 +48,9 @@ class Home extends CI_Controller
         }
         $this->session->sess_destroy();
         if (str_contains($userAgent, 'Dart')) {
+            $data = array('fcm_token' => null);
+            $this->db->where('user_email', $this->input->post('user_email'));
+            $this->db->update('users', $data);
             $response = array("status" => 1, "message" => "Logged out successfully");
             echo json_encode($response);
         } else {
